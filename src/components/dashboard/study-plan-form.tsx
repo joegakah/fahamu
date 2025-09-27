@@ -16,8 +16,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
+import type { GeneratePersonalizedStudyPlanOutput, GeneratePersonalizedStudyPlanInput } from "@/ai/flows/generate-personalized-study-plan"
+import { StudyCalendar } from "./study-calendar"
 
 const formSchema = z.object({
   studentName: z.string().min(2, "Name must be at least 2 characters."),
@@ -28,12 +29,13 @@ const formSchema = z.object({
 })
 
 type StudyPlanFormProps = {
-  getStudyPlan: (input: { studentName: string; weaknesses: string[]; upcomingExams: string[]; strengths: string[], studyMethods: string[] }) => Promise<string>;
+  getStudyPlan: (input: GeneratePersonalizedStudyPlanInput) => Promise<GeneratePersonalizedStudyPlanOutput>;
 }
 
 export function StudyPlanForm({ getStudyPlan }: StudyPlanFormProps) {
-  const [studyPlan, setStudyPlan] = useState<string | null>(null)
+  const [studyPlan, setStudyPlan] = useState<GeneratePersonalizedStudyPlanOutput | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,6 +51,7 @@ export function StudyPlanForm({ getStudyPlan }: StudyPlanFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
     setStudyPlan(null)
+    setError(null);
     try {
       const input = {
         studentName: values.studentName,
@@ -61,7 +64,7 @@ export function StudyPlanForm({ getStudyPlan }: StudyPlanFormProps) {
       setStudyPlan(result)
     } catch (error) {
       console.error("Failed to generate study plan:", error)
-      setStudyPlan("Sorry, we couldn't generate a study plan at this time. Please try again later.")
+      setError("Sorry, we couldn't generate a study plan at this time. Please try again later.")
     } finally {
       setIsLoading(false)
     }
@@ -165,17 +168,15 @@ export function StudyPlanForm({ getStudyPlan }: StudyPlanFormProps) {
           <p className="mt-2 text-muted-foreground">Our AI is crafting your plan...</p>
         </div>
       )}
-      {studyPlan && (
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Your Personalized Study Plan</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="whitespace-pre-wrap font-body text-sm bg-muted/50 p-4 rounded-md">
-                <code>{studyPlan}</code>
-            </pre>
-          </CardContent>
-        </Card>
+      {error && (
+        <div className="mt-8 text-center text-destructive">
+          <p>{error}</p>
+        </div>
+      )}
+      {studyPlan && studyPlan.studyPlan.length > 0 && (
+        <div className="mt-8">
+            <StudyCalendar sessions={studyPlan.studyPlan} />
+        </div>
       )}
     </>
   )

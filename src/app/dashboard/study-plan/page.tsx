@@ -1,4 +1,4 @@
-import { generatePersonalizedStudyPlan } from '@/ai/flows/generate-personalized-study-plan';
+import { generatePersonalizedStudyPlan, GeneratePersonalizedStudyPlanOutput, GeneratePersonalizedStudyPlanInput } from '@/ai/flows/generate-personalized-study-plan';
 import { StudyPlanForm } from '@/components/dashboard/study-plan-form';
 import {
   Card,
@@ -10,10 +10,10 @@ import {
 import { Bot } from 'lucide-react';
 
 export default function StudyPlanPage() {
-    async function getStudyPlan(input: { studentName: string; weaknesses: string[]; upcomingExams: string[]; strengths: string[], studyMethods: string[] }) {
+    async function getStudyPlan(input: GeneratePersonalizedStudyPlanInput): Promise<GeneratePersonalizedStudyPlanOutput> {
         'use server';
         const result = await generatePersonalizedStudyPlan(input);
-        return result.studyPlan;
+        return result;
     }
 
     return (

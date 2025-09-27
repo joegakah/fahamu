@@ -20,10 +20,20 @@ const GeneratePersonalizedStudyPlanInputSchema = z.object({
 });
 export type GeneratePersonalizedStudyPlanInput = z.infer<typeof GeneratePersonalizedStudyPlanInputSchema>;
 
+
+const StudySessionSchema = z.object({
+  date: z.string().describe("The date for the study session in 'YYYY-MM-DD' format."),
+  topic: z.string().describe('The specific topic to study.'),
+  objective: z.string().describe('A concise, measurable objective for the study session. What should the student be able to do after this session?'),
+  startTime: z.string().describe("The start time of the study session in 'HH:mm' format (24-hour)."),
+  endTime: z.string().describe("The end time of the study session in 'HH:mm' format (24-hour). Duration should be at least 2 hours."),
+});
+
 const GeneratePersonalizedStudyPlanOutputSchema = z.object({
-  studyPlan: z.string().describe('A detailed study plan tailored to the student, including topics to study, schedule, and study methods.'),
+  studyPlan: z.array(StudySessionSchema).describe('A structured calendar of study sessions for the next 7 days.'),
 });
 export type GeneratePersonalizedStudyPlanOutput = z.infer<typeof GeneratePersonalizedStudyPlanOutputSchema>;
+export type StudySession = z.infer<typeof StudySessionSchema>;
 
 export async function generatePersonalizedStudyPlan(input: GeneratePersonalizedStudyPlanInput): Promise<GeneratePersonalizedStudyPlanOutput> {
   return generatePersonalizedStudyPlanFlow(input);
@@ -33,7 +43,7 @@ const generatePersonalizedStudyPlanPrompt = ai.definePrompt({
   name: 'generatePersonalizedStudyPlanPrompt',
   input: {schema: GeneratePersonalizedStudyPlanInputSchema},
   output: {schema: GeneratePersonalizedStudyPlanOutputSchema},
-  prompt: `You are an AI study plan generator. You will generate a personalized study plan for a student based on their weaknesses, strengths, upcoming exams, and preferred study methods.
+  prompt: `You are an AI study plan generator. Create a 7-day personalized study calendar for a student based on their weaknesses, strengths, upcoming exams, and preferred study methods.
 
   Student Name: {{{studentName}}}
   Weaknesses: {{#each weaknesses}}{{{this}}}, {{/each}}
@@ -41,7 +51,13 @@ const generatePersonalizedStudyPlanPrompt = ai.definePrompt({
   Upcoming Exams: {{#each upcomingExams}}{{{this}}}, {{/each}}
   Study Methods: {{#each studyMethods}}{{{this}}}, {{/each}}
 
-  Generate a detailed study plan that addresses the student's weaknesses, prepares them for their upcoming exams, and incorporates their strengths and preferred study methods. The study plan should include specific topics to study, a suggested schedule, and recommended study methods for each topic. The plan should be formatted in markdown.
+  Generate a detailed 7-day study plan as a calendar.
+  - Each day must have at least one study session of a minimum of 2 hours.
+  - Each session must have a specific topic, a clear objective, a start time, and an end time.
+  - Prioritize weaknesses, but also include revision of strengths.
+  - Schedule sessions strategically based on upcoming exams.
+  - Start the plan from today's date.
+  - The output must be a JSON object matching the provided schema.
   `,
 });
 
