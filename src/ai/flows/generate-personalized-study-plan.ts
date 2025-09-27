@@ -26,7 +26,7 @@ const StudySessionSchema = z.object({
   topic: z.string().describe('The specific topic to study.'),
   objective: z.string().describe('A concise, measurable objective for the study session. What should the student be able to do after this session?'),
   startTime: z.string().describe("The start time of the study session in 'HH:mm' format (24-hour)."),
-  endTime: z.string().describe("The end time of the study session in 'HH:mm' format (24-hour). Duration should be at least 2 hours."),
+  endTime: z.string().describe("The end time of the study session in 'HH:mm' format (24-hour). Duration must be at least 2 hours."),
 });
 
 const GeneratePersonalizedStudyPlanOutputSchema = z.object({
@@ -52,8 +52,9 @@ const generatePersonalizedStudyPlanPrompt = ai.definePrompt({
   Study Methods: {{#each studyMethods}}{{{this}}}, {{/each}}
 
   Generate a detailed 7-day study plan as a calendar.
-  - Each day must have at least one study session of a minimum of 2 hours.
+  - Each day must have at least one study session.
   - Each session must have a specific topic, a clear objective, a start time, and an end time.
+  - Each study session must be a minimum of 2 hours long.
   - Prioritize weaknesses, but also include revision of strengths.
   - Schedule sessions strategically based on upcoming exams.
   - Start the plan from today's date.
