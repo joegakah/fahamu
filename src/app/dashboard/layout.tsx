@@ -5,11 +5,8 @@ import Link from "next/link"
 import { usePathname } from 'next/navigation';
 import {
   Book,
-  Briefcase,
   Home,
-  Settings,
   SquareKanban,
-  Users,
   Eye,
 } from "lucide-react"
 import {
@@ -70,22 +67,6 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                   <Link href="/dashboard/subjects">
                     <Eye />
                     <span>Subjects</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Teacher View">
-                  <Link href="/dashboard/teacher">
-                    <Users />
-                    <span>For Teachers</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Admin View">
-                  <Link href="/dashboard/admin">
-                    <Briefcase />
-                    <span>For Admins</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
