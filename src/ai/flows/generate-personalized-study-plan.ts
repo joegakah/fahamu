@@ -44,7 +44,7 @@ const generatePersonalizedStudyPlanPrompt = ai.definePrompt({
   name: 'generatePersonalizedStudyPlanPrompt',
   input: {schema: GeneratePersonalizedStudyPlanInputSchema},
   output: {schema: GeneratePersonalizedStudyPlanOutputSchema},
-  prompt: `You are an AI study plan generator. Create a 7-day personalized study calendar for a student based on their weaknesses, strengths, upcoming exams, and preferred study methods.
+  prompt: `You are an intelligent AI study plan generator. Create a balanced, 7-day personalized study calendar for a student that promotes learning without causing burnout.
 
   Student Name: {{{studentName}}}
   Weaknesses: {{#each weaknesses}}{{{this}}}, {{/each}}
@@ -52,11 +52,12 @@ const generatePersonalizedStudyPlanPrompt = ai.definePrompt({
   Upcoming Exams: {{#each upcomingExams}}{{{this}}}, {{/each}}
   Study Methods: {{#each studyMethods}}{{{this}}}, {{/each}}
 
-  Generate a detailed 7-day study plan as a calendar.
+  Generate a detailed 7-day study plan with the following rules:
   - Each day must have at least one study session.
   - Each session must have a specific topic, a clear objective, a start time, and an end time.
   - Each study session must be a minimum of 2 hours long.
-  - Prioritize weaknesses, but also include revision of strengths.
+  - To avoid mental overload, do not schedule more than one 'weakness' topic on the same day. Create a balanced schedule by mixing in 'average' and 'stronghold' topics.
+  - Prioritize weaknesses over the week, but also include revision of strengths.
   - For each session, set the 'masteryLevel' to 'weakness', 'average', or 'stronghold' based on the student's provided lists.
   - Schedule sessions strategically based on upcoming exams.
   - Start the plan from today's date.
