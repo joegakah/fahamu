@@ -27,6 +27,7 @@ const StudySessionSchema = z.object({
   objective: z.string().describe('A concise, measurable objective for the study session. What should the student be able to do after this session?'),
   startTime: z.string().describe("The start time of the study session in 'HH:mm' format (24-hour)."),
   endTime: z.string().describe("The end time of the study session in 'HH:mm' format (24-hour). Duration must be at least 2 hours."),
+  masteryLevel: z.enum(['weakness', 'average', 'stronghold']).describe("The student's mastery level for this topic. Base this on whether the topic is in the student's weaknesses or strengths list. Topics not in either list can be considered 'average'."),
 });
 
 const GeneratePersonalizedStudyPlanOutputSchema = z.object({
@@ -56,6 +57,7 @@ const generatePersonalizedStudyPlanPrompt = ai.definePrompt({
   - Each session must have a specific topic, a clear objective, a start time, and an end time.
   - Each study session must be a minimum of 2 hours long.
   - Prioritize weaknesses, but also include revision of strengths.
+  - For each session, set the 'masteryLevel' to 'weakness', 'average', or 'stronghold' based on the student's provided lists.
   - Schedule sessions strategically based on upcoming exams.
   - Start the plan from today's date.
   - The output must be a JSON object matching the provided schema.

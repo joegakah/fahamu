@@ -4,7 +4,7 @@ import type { StudySession } from '@/ai/flows/generate-personalized-study-plan';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Target, CalendarDays } from 'lucide-react';
-import { format, parseISO, eachDayOfInterval, startOfWeek, endOfWeek } from 'date-fns';
+import { format, parseISO, eachDayOfInterval } from 'date-fns';
 
 type StudyCalendarProps = {
   sessions: StudySession[];
@@ -13,6 +13,15 @@ type StudyCalendarProps = {
 type SessionsByDay = {
   [key: string]: StudySession[];
 };
+
+const getMasteryBadgeVariant = (level: string): 'destructive' | 'secondary' | 'default' => {
+    switch (level) {
+        case "weakness": return "destructive";
+        case "average": return "secondary";
+        case "stronghold": return "default";
+        default: return "secondary";
+    }
+}
 
 export function StudyCalendar({ sessions }: StudyCalendarProps) {
   const sessionsByDay: SessionsByDay = sessions.reduce((acc: SessionsByDay, session) => {
@@ -26,11 +35,10 @@ export function StudyCalendar({ sessions }: StudyCalendarProps) {
 
   const sessionDates = sessions.map(s => parseISO(s.date));
   const firstDay = sessionDates.length > 0 ? sessionDates[0] : new Date();
-  const lastDay = sessionDates.length > 0 ? sessionDates[sessionDates.length - 1] : new Date();
   
   const weekDays = eachDayOfInterval({
     start: firstDay,
-    end: lastDay
+    end: new Date(firstDay.getTime() + 6 * 24 * 60 * 60 * 1000)
   });
 
   return (
@@ -54,7 +62,7 @@ export function StudyCalendar({ sessions }: StudyCalendarProps) {
                 {daySessions.length > 0 ? (
                   daySessions.sort((a,b) => a.startTime.localeCompare(b.startTime)).map((session, index) => (
                     <div key={index} className="p-3 rounded-lg border bg-card shadow-sm space-y-2">
-                       <Badge variant="secondary">{session.topic}</Badge>
+                       <Badge variant={getMasteryBadgeVariant(session.masteryLevel)}>{session.topic}</Badge>
                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Clock className="h-4 w-4" />
                         <span>{session.startTime} - {session.endTime}</span>
