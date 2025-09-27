@@ -5,111 +5,119 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { OverviewChart } from "@/components/dashboard/overview-chart"
+import { Progress } from "@/components/ui/progress"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Lightbulb, Target } from "lucide-react"
+import { OverallPerformanceChart } from "@/components/dashboard/overall-performance-chart"
+import { SubjectBreakdownChart } from "@/components/dashboard/subject-breakdown-chart"
 
-const performanceData = [
-  { subject: 'Mathematics', topic: 'Algebra', score: 65, status: 'Average' },
-  { subject: 'Physics', topic: 'Kinematics', score: 88, status: 'Excellent' },
-  { subject: 'Chemistry', topic: 'Stoichiometry', score: 92, status: 'Excellent' },
-  { subject: 'Biology', topic: 'Cell Division', score: 71, status: 'Average' },
-  { subject: 'History', topic: 'World War II', score: 55, status: 'Improvement Needed' },
+const topicProgress = [
+  {
+    topic: "Geometry",
+    before: 30,
+    after: 65,
+    sessions_completed: 4
+  },
+  {
+    topic: "Photosynthesis",
+    before: 50,
+    after: 80,
+    sessions_completed: 3
+  }
 ];
 
-const weaknesses = [
-  'Algebraic equations in Mathematics',
-  'Understanding historical timelines in History',
+const aiInsights = [
+  "Your Chemistry scores increased by 20% after 2 hrs/week study.",
+  "Biology performance is dropping — revise last month’s notes."
 ];
+
+const badges = ["Consistency Star", "Math Improver", "Top Performer"];
 
 export default function StudentDashboard() {
   return (
-    <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-4 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
       <div className="xl:col-span-2">
         <Card>
           <CardHeader>
-            <CardTitle>Performance Overview</CardTitle>
+            <CardTitle>Your Progress</CardTitle>
             <CardDescription>
-              Your academic progress over the last few months.
+              Overall performance trend over the last 4 weeks.
             </CardDescription>
           </CardHeader>
           <CardContent className="pl-2">
-            <OverviewChart />
+            <OverallPerformanceChart />
           </CardContent>
         </Card>
       </div>
-      <div>
+      <div className="lg:col-span-1 xl:col-span-2">
         <Card>
           <CardHeader>
-            <CardTitle>Identified Weaknesses</CardTitle>
+            <CardTitle>Subjects Strength Map</CardTitle>
             <CardDescription>
-              Areas where you can focus to improve your scores.
+              Your performance breakdown by subject.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-3">
-              {weaknesses.map((weakness, index) => (
-                <li key={index} className="flex items-center text-sm text-foreground">
-                  <span className="mr-2 h-2 w-2 rounded-full bg-destructive" />
-                  {weakness}
-                </li>
-              ))}
-            </ul>
-             <p className="text-sm text-muted-foreground mt-4">
-              Use the <span className="font-semibold text-primary">Study Plan</span> and <span className="font-semibold text-primary">Guidance</span> pages to work on these areas.
-             </p>
+            <SubjectBreakdownChart />
           </CardContent>
         </Card>
       </div>
-      <div className="xl:col-span-3">
+
+      <div className="xl:col-span-4">
         <Card>
           <CardHeader>
-            <CardTitle>Recent Performance</CardTitle>
-            <CardDescription>
-              A summary of your recent test and assignment scores.
+            <CardTitle>Weakness Improvement Tracking</CardTitle>
+             <CardDescription>
+              See your progress in the topics you are focusing on.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Subject</TableHead>
-                  <TableHead>Topic</TableHead>
-                  <TableHead className="text-right">Score</TableHead>
-                  <TableHead className="text-right">Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {performanceData.map((item) => (
-                  <TableRow key={item.subject + item.topic}>
-                    <TableCell className="font-medium">{item.subject}</TableCell>
-                    <TableCell>{item.topic}</TableCell>
-                    <TableCell className="text-right">{item.score}%</TableCell>
-                    <TableCell className="text-right">
-                       <Badge
-                        variant={
-                          item.status === 'Improvement Needed'
-                            ? 'destructive'
-                            : item.status === 'Excellent'
-                            ? 'default'
-                            : 'secondary'
-                        }
-                      >
-                        {item.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
+          <CardContent className="space-y-6">
+            {topicProgress.map((item, index) => (
+              <div key={index}>
+                <div className="flex justify-between items-center mb-2">
+                  <p className="font-medium">{item.topic}</p>
+                  <p className="text-sm text-muted-foreground">
+                    <span className="text-destructive font-semibold">{item.before}%</span> → <span className="text-primary font-semibold">{item.after}%</span>
+                  </p>
+                </div>
+                <Progress value={item.after} />
+                 <p className="text-xs text-muted-foreground mt-2">{item.sessions_completed} sessions completed.</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+       <div className="lg:col-span-2 xl:col-span-4">
+        <Alert>
+          <Lightbulb className="h-4 w-4" />
+          <AlertTitle>AI Insights</AlertTitle>
+          <AlertDescription>
+             <ul className="list-disc list-inside">
+                {aiInsights.map((insight, index) => (
+                    <li key={index}>{insight}</li>
                 ))}
-              </TableBody>
-            </Table>
-          </CardContent>
+            </ul>
+          </AlertDescription>
+        </Alert>
+      </div>
+
+       <div className="lg:col-span-1 xl:col-span-4">
+         <Card>
+            <CardHeader>
+                <CardTitle>Badges Earned</CardTitle>
+                 <CardDescription>
+                    Your achievements and milestones.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-2">
+                {badges.map((badge) => (
+                <Badge key={badge} variant="secondary" className="text-sm">
+                    🎉 {badge}
+                </Badge>
+                ))}
+            </CardContent>
         </Card>
       </div>
     </div>
