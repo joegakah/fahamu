@@ -8,7 +8,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Award, BookOpen, Briefcase, Calendar, ChevronRight, Lightbulb, Target } from "lucide-react"
+import { Award, BookOpen, Briefcase, Calendar, ChevronRight, Lightbulb, Target, Eye } from "lucide-react"
 import { OverallPerformanceChart } from "@/components/dashboard/overall-performance-chart"
 import { SubjectBreakdownChart } from "@/components/dashboard/subject-breakdown-chart"
 import Link from "next/link"
@@ -218,6 +218,21 @@ export default function StudentDashboard() {
                         <p className="text-sm text-muted-foreground mb-4">Your upcoming study sessions.</p>
                         <Button className="w-full" variant="outline" asChild>
                              <Link href="/dashboard/study-plan">View Full Calendar <ChevronRight className="h-4 w-4 ml-1" /></Link>
+                        </Button>
+                    </CardContent>
+                </Card>
+                
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-center gap-2">
+                            <Eye className="h-5 w-5" />
+                            <CardTitle>Subjects View</CardTitle>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground mb-4">A focused view of all your subjects.</p>
+                        <Button className="w-full" variant="outline" asChild>
+                           <Link href="/dashboard/subjects">View Subjects<ChevronRight className="h-4 w-4 ml-1" /></Link>
                         </Button>
                     </CardContent>
                 </Card>

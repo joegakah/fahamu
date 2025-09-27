@@ -1,5 +1,8 @@
+// src/app/dashboard/layout.tsx
+'use client';
 import type { PropsWithChildren } from "react"
 import Link from "next/link"
+import { usePathname } from 'next/navigation';
 import {
   Book,
   Briefcase,
@@ -7,6 +10,7 @@ import {
   Settings,
   SquareKanban,
   Users,
+  Eye,
 } from "lucide-react"
 import {
   Sidebar,
@@ -23,6 +27,17 @@ import { UserNav } from "@/components/user-nav"
 import { Logo } from "@/components/logo"
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
+  const pathname = usePathname();
+  const showSidebar = pathname !== '/dashboard/subjects';
+
+  if (!showSidebar) {
+    return (
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
+          {children}
+        </main>
+    )
+  }
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -54,6 +69,14 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 <Link href="/dashboard/guidance">
                   <Book />
                   <span>Guidance</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Subjects">
+                <Link href="/dashboard/subjects">
+                  <Eye />
+                  <span>Subjects</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
