@@ -33,10 +33,10 @@ export default function RoleSelectionPage() {
             <Logo />
         </div>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-headline text-foreground mb-4">
-          Welcome to Your AI-Powered Study Partner
+          Bridging the Gap for Every Learner, Everywhere With Ai
         </h2>
         <p className="text-lg sm:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Choose your role to get started. Let's unlock your full potential together.
+          Fahamu AI uses advanced analytics to identify learning gaps in real-time, giving teachers the precision to intervene exactly where it matters most.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
